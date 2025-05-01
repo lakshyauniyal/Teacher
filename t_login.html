@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Login & Signup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #fdf6e3;         /* Cream background */
+            --card-bg: #ffffff;          /* White card */
+            --text-color: #4a2c2a;       /* Dark brown text */
+            --accent-color: #e67e22;     /* Burnt orange accent */
+            --btn-bg: #16a085;           /* Deep teal button */
+            --btn-hover: #117864;        /* Darker teal on hover */
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --notification-success-bg: #27ae60; /* Green for success */
+            --notification-error-bg: #c0392b;   /* Red for error */
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #2c1f1d;         /* Dark brown background */
+            --card-bg: #3c2f2f;          /* Darker card */
+            --text-color: #f5e6cc;       /* Light cream text */
+            --accent-color: #e67e22;     /* Burnt orange accent */
+            --btn-bg: #16a085;           /* Deep teal button */
+            --btn-hover: #1abc9c;        /* Lighter teal on hover */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(230, 126, 34, 0.2); /* Subtle orange border */
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .form-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-toggle button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 15px;
+            transition: color 0.3s, transform 0.2s;
+        }
+
+        .form-toggle button.active {
+            color: var(--accent-color);
+            border-bottom: 3px solid var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        .form-toggle button:hover {
+            color: var(--btn-hover);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            padding: 14px;
+            border: 2px solid rgba(74, 44, 42, 0.2); /* Light brown border */
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        button[type="submit"] {
+            padding: 14px;
+            background: var(--btn-bg);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background: var(--btn-hover);
+            transform: translateY(-2px);
+        }
+
+        button[type="submit"]:disabled {
+            background: #a0a0a0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        #loginForm {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+                max-width: 90%;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .form-toggle button {
+                font-size: 16px;
+                padding: 6px 12px;
+            }
+
+            input, button[type="submit"] {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teacher Portal</h1>
+        <div class="form-toggle">
+            <button id="loginToggle" class="active">Login</button>
+            <button id="signupToggle">Signup</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" required placeholder="Enter your email">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" required placeholder="Enter your password">
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- Signup Form -->
+        <form id="signupForm">
+            <label for="signupName">Full Name</label>
+            <input type="text" id="signupName" required placeholder="Enter your full name">
+            <label for="signupEmail">Email</label>
+            <input type="email" id="signupEmail" required placeholder="Enter your email">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" required placeholder="Enter your password (min 6 chars)">
+            <button type="submit">Signup</button>
+        </form>
+
+        <div id="status"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
+        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzguLoHs-7yrbSal8IBDqnKL8MWwlUJZA",
+            authDomain: "tmcp-a366e.firebaseapp.com",
+            databaseURL: "https://tmcp-a366e-default-rtdb.firebaseio.com",
+            projectId: "tmcp-a366e",
+            storageBucket: "tmcp-a366e.firebasestorage.app",
+            messagingSenderId: "136159734708",
+            appId: "1:136159734708:web:5f33b5cd7535c09227e0e1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        // Form elements
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const loginToggle = document.getElementById('loginToggle');
+        const signupToggle = document.getElementById('signupToggle');
+        const status = document.getElementById('status');
+
+        // Toggle between login and signup forms
+        loginToggle.addEventListener('click', () => {
+            loginForm.style.display = 'flex';
+            signupForm.style.display = 'none';
+            loginToggle.classList.add('active');
+            signupToggle.classList.remove('active');
+            status.textContent = '';
+        });
+
+        signupToggle.addEventListener('click', () => {
+            loginForm.style.display = 'none';
+            signupForm.style.display = 'flex';
+            loginToggle.classList.remove('active');
+            signupToggle.classList.add('active');
+            status.textContent = '';
+        });
+
+        // Default to login form
+        loginForm.style.display = 'flex';
+        signupForm.style.display = 'none';
+
+        // Login form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    status.textContent = 'Login successful! Redirecting...';
+                    status.style.color = 'var(--notification-success-bg)';
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                })
+                .catch((error) => {
+                    status.textContent = `Login failed: ${error.message}`;
+                    status.style.color = 'var(--notification-error-bg)';
+                });
+        });
+
+        // Signup form submission
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    // Store teacher data in 'teachers' collection
+                    return set(ref(database, `teachers/${user.uid}`), {
+                        name: name,
+                        email: email,
+                        createdAt: new Date().toISOString()
+                    });
+                })
+                .then(() => {
+                    status.textContent = 'Signup successful! Please login.';
+                    status.style.color = 'var(--notification-success-bg)';
+                    signupForm.reset();
+                    loginToggle.click(); // Switch to login form
+                })
+                .catch((error) => {
+                    status.textContent = `Signup failed: ${error.message}`;
+                    status.style.color = 'var(--notification-error-bg)';
+                });
+        });
+    </script>
+</body>
+</html>

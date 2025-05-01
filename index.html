@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #FBF8EF;         /* Cream background */
+            --card-bg: #ffffff;          /* White card */
+            --text-color: #4a4a4a;       /* Dark gray text */
+            --accent-color: #FFB433;     /* Golden orange accent */
+            --btn-bg: #80CBC4;           /* Teal button */
+            --btn-hover: #66B7B0;        /* Darker teal on hover */
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --notification-success-bg: #27ae60; /* Green for success */
+            --notification-error-bg: #c0392b;   /* Red for error */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background: var(--card-bg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links button {
+            padding: 10px 20px;
+            background: var(--btn-bg);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .nav-links button:hover {
+            background: var(--btn-hover);
+            transform: translateY(-2px);
+        }
+
+        .nav-links .logout-btn {
+            background: var(--notification-error-bg);
+        }
+
+        .nav-links .logout-btn:hover {
+            background: #a93226;
+        }
+
+        main {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .dashboard-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 900px;
+            border: 2px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 180, 51, 0.1), transparent);
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .greeting {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote {
+            font-size: 18px;
+            font-style: italic;
+            color: var(--text-color);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .branch-info {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--btn-bg);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .semester-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .semester-toggle button {
+            padding: 12px 25px;
+            background: var(--btn-bg);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+
+        .semester-toggle button.active {
+            background: var(--accent-color);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(255, 180, 51, 0.5);
+        }
+
+        .semester-toggle button:hover {
+            background: var(--btn-hover);
+            transform: translateY(-2px);
+        }
+
+        .strength-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .strength-box {
+            background: #B4EBE6;
+            padding: 20px;
+            border-radius: 12px;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .strength-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .strength-box h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .strength-box p {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        #status {
+            font-size: 16px;
+            margin-top: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .dashboard-content {
+                padding: 25px;
+            }
+
+            .greeting {
+                font-size: 28px;
+            }
+
+            .quote {
+                font-size: 16px;
+            }
+
+            .strength-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+
+            .dashboard-content {
+                padding: 20px;
+            }
+
+            .greeting {
+                font-size: 24px;
+            }
+
+            .quote {
+                font-size: 14px;
+            }
+
+            .branch-info {
+                font-size: 18px;
+            }
+
+            .semester-toggle button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .strength-box h3 {
+                font-size: 16px;
+            }
+
+            .strength-box p {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">Teacher Panel</div>
+        <div class="nav-links">
+            <button onclick="window.location.href='index.html'">Dashboard</button>
+            <button onclick="window.location.href='profile.html'">Profile</button>
+            <button onclick="window.location.href='students.html'">Students</button>
+            <button onclick="window.location.href='t_marks.html'">Marks</button>
+            <button onclick="window.location.href='t_attendance.html'">Attendance</button>
+            <button onclick="window.location.href='assignments.html'">Assignments</button>
+            <button onclick="window.location.href='settings.html'">Settings</button>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </nav>
+    <main>
+        <div class="dashboard-content">
+            <div class="greeting" id="greeting">Hello,</div>
+            <div class="quote" id="quote"></div>
+            <div class="branch-info" id="branchInfo">Branch: Loading...</div>
+            <div class="semester-toggle">
+                <button id="oddBtn">Odd Semesters</button>
+                <button id="evenBtn">Even Semesters</button>
+            </div>
+            <div class="strength-container" id="strengthContainer">
+                <!-- Dynamically populated -->
+            </div>
+            <div id="status"></div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
+        import { getDatabase, ref, get, set } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzguLoHs-7yrbSal8IBDqnKL8MWwlUJZA",
+            authDomain: "tmcp-a366e.firebaseapp.com",
+            databaseURL: "https://tmcp-a366e-default-rtdb.firebaseio.com",
+            projectId: "tmcp-a366e",
+            storageBucket: "tmcp-a366e.firebasestorage.app",
+            messagingSenderId: "136159734708",
+            appId: "1:136159734708:web:5f33b5cd7535c09227e0e1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        const greeting = document.getElementById('greeting');
+        const quote = document.getElementById('quote');
+        const branchInfo = document.getElementById('branchInfo');
+        const oddBtn = document.getElementById('oddBtn');
+        const evenBtn = document.getElementById('evenBtn');
+        const strengthContainer = document.getElementById('strengthContainer');
+        const status = document.getElementById('status');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Random motivating quotes
+        const quotes = [
+            "The best way to predict the future is to create it. – Peter Drucker",
+            "Education is the most powerful weapon you can use to change the world. – Nelson Mandela",
+            "Success is not final, failure is not fatal: It is the courage to continue that counts. – Winston Churchill",
+            "The only way to do great work is to love what you do. – Steve Jobs",
+            "You are never too old to set another goal or to dream a new dream. – C.S. Lewis"
+        ];
+
+        // Set random quote
+        quote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+        // Semester data
+        const oddSemesters = ['1', '3', '5'];
+        const evenSemesters = ['2', '4', '6'];
+
+        // Check auth state and load data
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const teacherRef = ref(database, `teachers/${user.uid}`);
+                get(teacherRef).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const teacherData = snapshot.val();
+                        greeting.textContent = `Hello, ${teacherData.name}!`;
+                        branchInfo.textContent = `Branch: ${teacherData.branch || 'Not specified'}`;
+                        const activeSemester = teacherData.activeSemester || 'odd'; // Default to odd
+                        toggleSemester(activeSemester, teacherData.branch);
+                    } else {
+                        greeting.textContent = "Hello, Teacher!";
+                        branchInfo.textContent = "Branch: Not specified";
+                        status.textContent = "Profile data not found.";
+                        status.style.color = 'var(--notification-error-bg)';
+                    }
+                }).catch((error) => {
+                    console.error('Error fetching teacher data:', error);
+                    status.textContent = "Error loading profile.";
+                    status.style.color = 'var(--notification-error-bg)';
+                });
+            } else {
+                window.location.href = 't_login.html';
+            }
+        });
+
+        // Toggle semester and update Firebase
+        function toggleSemester(activeSemester, teacherBranch) {
+            oddBtn.classList.toggle('active', activeSemester === 'odd');
+            evenBtn.classList.toggle('active', activeSemester === 'even');
+            loadStudentStrength(activeSemester, teacherBranch);
+
+            // Store preference in Firebase
+            const user = auth.currentUser;
+            if (user) {
+                set(ref(database, `teachers/${user.uid}/activeSemester`), activeSemester)
+                    .catch((error) => {
+                        console.error('Error saving semester preference:', error);
+                        status.textContent = "Error saving preference.";
+                        status.style.color = 'var(--notification-error-bg)';
+                    });
+            }
+        }
+
+        // Load student strength
+        async function loadStudentStrength(activeSemester, teacherBranch) {
+            try {
+                const studentsRef = ref(database, 'students');
+                const snapshot = await get(studentsRef);
+                const students = snapshot.val();
+                const activeSemesters = activeSemester === 'odd' ? oddSemesters : evenSemesters;
+
+                strengthContainer.innerHTML = ''; // Clear previous boxes
+                activeSemesters.forEach(sem => {
+                    const count = students ? Object.values(students).filter(student => 
+                        student.branch === teacherBranch && student.semester === sem
+                    ).length : 0;
+
+                    const box = document.createElement('div');
+                    box.className = 'strength-box';
+                    box.innerHTML = `
+                        <h3>Semester ${sem}</h3>
+                        <p>${count}</p>
+                    `;
+                    strengthContainer.appendChild(box);
+                });
+
+                if (!students || strengthContainer.children.length === 0) {
+                    status.textContent = "No students found for this semester.";
+                    status.style.color = 'var(--notification-error-bg)';
+                } else {
+                    status.textContent = '';
+                }
+            } catch (error) {
+                console.error('Error loading student strength:', error);
+                status.textContent = "Error loading student data.";
+                status.style.color = 'var(--notification-error-bg)';
+            }
+        }
+
+        // Toggle button events
+        oddBtn.addEventListener('click', () => {
+            const user = auth.currentUser;
+            if (user) {
+                get(ref(database, `teachers/${user.uid}`)).then((snapshot) => {
+                    const teacherData = snapshot.val();
+                    toggleSemester('odd', teacherData.branch);
+                });
+            }
+        });
+
+        evenBtn.addEventListener('click', () => {
+            const user = auth.currentUser;
+            if (user) {
+                get(ref(database, `teachers/${user.uid}`)).then((snapshot) => {
+                    const teacherData = snapshot.val();
+                    toggleSemester('even', teacherData.branch);
+                });
+            }
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = 't_login.html';
+            }).catch((error) => {
+                status.textContent = `Logout failed: ${error.message}`;
+                status.style.color = 'var(--notification-error-bg)';
+            });
+        });
+    </script>
+</body>
+</html>

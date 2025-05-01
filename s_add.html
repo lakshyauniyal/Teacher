@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --sidebar-bg: #2c3e50;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --accent-color: #3498db;
+            --btn-bg: #3498db;
+            --btn-hover: #2980b9;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --sidebar-bg: #2c2c2c;
+            --card-bg: #333;
+            --text-color: #e0e0e0;
+            --accent-color: #4dabf7;
+            --btn-bg: #4dabf7;
+            --btn-hover: #339af0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        .form-section {
+            max-width: 500px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-section h2 {
+            font-size: 22px;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            width: 100%;
+        }
+
+        .form-btn {
+            padding: 12px 15px;
+            background: var(--btn-bg);
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .form-btn:hover {
+            background: var(--btn-hover);
+        }
+
+        @media (max-width: 768px) {
+            .form-section {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            input, select {
+                padding#mobile {
+                    padding: 10px;
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-section">
+        <h2>Add Student</h2>
+        <form id="studentForm" class="form-grid">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="rollNo">Roll No:</label>
+                <input type="text" id="rollNo" required>
+            </div>
+            <div class="form-group">
+                <label for="fatherName">Father's Name:</label>
+                <input type="text" id="fatherName" required>
+            </div>
+            <div class="form-group">
+                <label for="branch">Branch:</label>
+                <select id="branch" required>
+                    <option value="COE">COE</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="semester">Semester:</label>
+                <select id="semester" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile No:</label>
+                <input type="tel" id="mobile" required pattern="[0-9]{10}">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <button type="submit" class="form-btn">Submit</button>
+        </form>
+    </div>
+
+    <!-- Firebase SDK with type="module" -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getDatabase, ref, set, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzguLoHs-7yrbSal8IBDqnKL8MWwlUJZA",
+            authDomain: "tmcp-a366e.firebaseapp.com",
+            databaseURL: "https://tmcp-a366e-default-rtdb.firebaseio.com",
+            projectId: "tmcp-a366e",
+            storageBucket: "tmcp-a366e.firebasestorage.app",
+            messagingSenderId: "136159734708",
+            appId: "1:136159734708:web:5f33b5cd7535c09227e0e1"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const database = getDatabase(app);
+            console.log("Firebase initialized successfully");
+
+            document.getElementById('studentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const studentData = {
+                    name: document.getElementById('name').value.trim(),
+                    rollNo: document.getElementById('rollNo').value.trim(),
+                    fatherName: document.getElementById('fatherName').value.trim(),
+                    branch: document.getElementById('branch').value,
+                    semester: document.getElementById('semester').value,
+                    mobile: document.getElementById('mobile').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    createdAt: serverTimestamp()
+                };
+
+                console.log("Submitting data:", studentData);
+
+                const cleanRollNo = studentData.rollNo.replace(/[.#$/[\]]/g, '_');
+
+                set(ref(database, 'students/' + cleanRollNo), studentData)
+                    .then(() => {
+                        console.log("Write operation successful");
+                        alert('Student profile saved successfully!');
+                        document.getElementById('studentForm').reset();
+                    })
+                    .catch((error) => {
+                        console.error("Write failed:", error);
+                        alert('Error saving data: ' + error.message);
+                    });
+            });
+
+            const connectedRef = ref(database, '.info/connected');
+            connectedRef.on('value', (snapshot) => {
+                if (snapshot.val() === true) {
+                    console.log('Connected to Firebase');
+                } else {
+                    console.log('Disconnected from Firebase');
+                }
+            });
+
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+    </script>
+</body>
+</html>
